@@ -4,5 +4,5 @@ from . import views
 app_name = 'map'  # Define o namespace do app
 
 urlpatterns = [
-    path('', views.index, name='map'),
+    path('', views.criar_mapa, name='mapa'),
 ]

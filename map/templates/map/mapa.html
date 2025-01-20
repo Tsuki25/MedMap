@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_8ad8b55b332565b01114d7e8b51a87e2 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+        
+</head>
+<body>
+    
+    
+            <div class="folium-map" id="map_8ad8b55b332565b01114d7e8b51a87e2" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_8ad8b55b332565b01114d7e8b51a87e2 = L.map(
+                "map_8ad8b55b332565b01114d7e8b51a87e2",
+                {
+                    center: [-23.1171, -46.5563],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 13,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_feaa6ecc6b13d7c1e36380b0d651b6d6 = L.tileLayer(
+                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 19,
+  "maxNativeZoom": 19,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_feaa6ecc6b13d7c1e36380b0d651b6d6.addTo(map_8ad8b55b332565b01114d7e8b51a87e2);
+        
+    
+            var marker_bbe8b5563da556cb5043485daf6dccff = L.marker(
+                [-23.114379383466236, -46.57133352029193],
+                {
+}
+            ).addTo(map_8ad8b55b332565b01114d7e8b51a87e2);
+        
+    
+            var icon_fdd8d051d3b2ba546c9ffe46c221bded = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "red",
+  "iconColor": "white",
+  "icon": "fa-hospital",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_bbe8b5563da556cb5043485daf6dccff.setIcon(icon_fdd8d051d3b2ba546c9ffe46c221bded);
+        
+    
+        var popup_c580a81e118a61319ae6bb2166bb76dc = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_dc3659b3d1c6f4f504095f5c24c585aa = $(`<div id="html_dc3659b3d1c6f4f504095f5c24c585aa" style="width: 100.0%; height: 100.0%;">         <div style='width: 200px;'>             <h4 style='margin-bottom: 10px;'>Albert Sabin Hospital e Maternidade</h4>             <ul style='list-style-type: none; padding-left: 0;'>                 <li><strong>Endereço:</strong> Rua da Bahia, 342 - Recreio Estoril, Atibaia/São Paulo</li>                 <li><strong>Planos de Saúde Aceitos:</strong> Bradesco, Climed</li>                 <li><strong>Horário de Atendimento:</strong> 24H</li>                 <li><strong>Tempo médio para Atendimento:</strong> 0:50:00</li>                 <li><strong>Pessoas aguardando:</strong> 15</li>                 <li><strong>Especialidade:</strong> Geral</li>             </ul>         </div>         </div>`)[0];
+                popup_c580a81e118a61319ae6bb2166bb76dc.setContent(html_dc3659b3d1c6f4f504095f5c24c585aa);
+            
+        
+
+        marker_bbe8b5563da556cb5043485daf6dccff.bindPopup(popup_c580a81e118a61319ae6bb2166bb76dc)
+        ;
+
+        
+    
+    
+            var marker_a18502ea49fddcb17e89f029c3926206 = L.marker(
+                [-23.116924006541193, -46.5430557676656],
+                {
+}
+            ).addTo(map_8ad8b55b332565b01114d7e8b51a87e2);
+        
+    
+            var icon_00570936ca4e2dd7ab0b44f0a0bffbbc = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "red",
+  "iconColor": "white",
+  "icon": "fa-hospital",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+            marker_a18502ea49fddcb17e89f029c3926206.setIcon(icon_00570936ca4e2dd7ab0b44f0a0bffbbc);
+        
+    
+        var popup_7b007bb59411a831d50deb8ef4a9bad7 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_ba94ce375c1f4b8945c8e76a123590f0 = $(`<div id="html_ba94ce375c1f4b8945c8e76a123590f0" style="width: 100.0%; height: 100.0%;">         <div style='width: 200px;'>             <h4 style='margin-bottom: 10px;'>Hospital Novo Atibaia</h4>             <ul style='list-style-type: none; padding-left: 0;'>                 <li><strong>Endereço:</strong> Rua Pedro Cunha, 145 - Vila Santista, Atibaia/São Paulo</li>                 <li><strong>Planos de Saúde Aceitos:</strong> Unimed, Bradesco, Climed</li>                 <li><strong>Horário de Atendimento:</strong> 08:00 - 20:00</li>                 <li><strong>Tempo médio para Atendimento:</strong> 0:40:00</li>                 <li><strong>Pessoas aguardando:</strong> 10</li>                 <li><strong>Especialidade:</strong> Geral</li>             </ul>         </div>         </div>`)[0];
+                popup_7b007bb59411a831d50deb8ef4a9bad7.setContent(html_ba94ce375c1f4b8945c8e76a123590f0);
+            
+        
+
+        marker_a18502ea49fddcb17e89f029c3926206.bindPopup(popup_7b007bb59411a831d50deb8ef4a9bad7)
+        ;
+
+        
+    
+</script>
+</html>
