@@ -1,0 +1,76 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-size: 12px;
+    font-family: Bahnschrift, Arial, sans-serif;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+main {
+    display: flex;
+    flex: 1; /* Ocupa todo o espaço restante entre a navbar e o topo */
+}
+
+#map {
+    flex: 3.5;
+    height: 100%; /* Garante que o mapa ocupe a altura total do main */
+}
+
+#sidebar {
+    flex: 1;
+    background-color: #8abaf9;
+    padding: 10px;
+    overflow-y: auto;
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+#sidebar h3 {
+    font-size: 2rem;
+    text-align: center;
+    margin: 20px 0;
+}
+
+.hospital-item {
+    margin-bottom: 15px;
+    padding: 10px;
+    background-color: aliceblue;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+.hospital-item h4 {
+    margin: 0 0 5px;
+    font-size: 1.3rem;
+}
+
+nav {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+    height: 10vh;
+    background-color: #181860;
+    position: relative; /* Pode ajustar para fixed, se necessário */
+}
+
+.navbar-item {
+    text-align: center;
+    color: white;
+    flex-basis: 33%;
+    cursor: pointer;
+}
+
+.navbar-item a, i{
+    font-size: 2rem;
+}
+
+.navbar-item:hover{
+    color: #8abaf9;
+}
