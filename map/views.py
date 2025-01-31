@@ -1,28 +1,42 @@
 from django.shortcuts import render
 import folium
+from folium.plugins import LocateControl # Usado para pegar a localização do usuário e gerar o ponto
+
 from .models import UnidadeAtendimento
 from geopy.distance import geodesic  # Para calcular a distância entre pontos
 
-# Coordenadas do Usuário
-coordenadas_usuario = [-23.1171, -46.5563]  # Coordenadas de exemplo
-
 def criar_mapa(request):
+    # Pega as coordenadas do usuárias captadas ao iniciar a aplicação
+    lat_user = request.GET.get("lat_user")
+    lon_user = request.GET.get("lon_user")
+
+    # Se as coordenadas não forem recebidas, define um valor padrão
+    if not lat_user or not lon_user:
+        lat_user, lon_user = -23.55, -46.63  # Coordenadas padrão (São Paulo)
+
+    # Converte para float
+    coordenadas_usuario = [float(lat_user), float(lon_user)]
+
+
     # Criação do mapa centrado no usuário
     mapa = folium.Map(location=coordenadas_usuario, zoom_start=13)
 
-    # Adicionar marcador para a localização do usuário
-    folium.Marker(
-        location=coordenadas_usuario,
-        icon=folium.Icon(color='blue', icon='fa-user', prefix='fa'),
-        tooltip="Você está aqui"
+    # Adiciona a Localização do Usuário no mapa
+    LocateControl(
+        auto_start=True,
+        keepCurrentZoomLevel=True,
+        drawMarker=True,
+        icon="fa-user",  # Define o ícone do usuário
+        prefix="fa",  # Define a biblioteca de ícones FontAwesome
+        strings={"title": "Sua localização"}  # Define o título do botão
     ).add_to(mapa)
 
     # Função para adicionar marcadores de unidades no mapa
-    def adicionar_ponto_unidade(mapa, latitude, longitude, nome, descricao_completa):
+    def adicionar_ponto_unidade(mapa, latitude, longitude, descricao_completa, cor_marcador):
         folium.Marker(
             location=[latitude, longitude],
             popup=folium.Popup(descricao_completa, max_width=300),
-            icon=folium.Icon(color='red', icon='fa-hospital', prefix='fa')
+            icon=folium.Icon(color=cor_marcador, icon='fa-hospital', prefix='fa')
         ).add_to(mapa)
 
     # Buscar todas as unidades de atendimento do banco de dados
@@ -55,8 +69,8 @@ def criar_mapa(request):
     unidades_mais_proximas = sorted(unidades_distancia, key=lambda x: x["distancia"])[:5]
     unidades_carregadas = sorted(unidades_distancia, key=lambda x: x["distancia"])[:100]
 
-    # Adicionar os pontos ao mapa
-    for unidade in unidades_carregadas:
+    # Adicionar os pontos ao mapa para todos as unidades
+    for i, unidade in enumerate(unidades_carregadas):
         descricao_completa = f"""
         <div style='width: 200px;'>
             <h4 style='margin-bottom: 10px;'>{unidade['nome']}</h4>
@@ -71,7 +85,11 @@ def criar_mapa(request):
             </ul>
         </div>
         """
-        adicionar_ponto_unidade(mapa, unidade["latitude"], unidade["longitude"], unidade["nome"], descricao_completa)
+
+        # Definir a cor: amarelo para os 5 mais próximos, vermelho para o restante
+        cor = "orange" if i < 5 else "red"
+
+        adicionar_ponto_unidade(mapa, unidade["latitude"], unidade["longitude"], descricao_completa, cor)
 
     # Renderizar o mapa como HTML
     mapa_html = mapa._repr_html_()

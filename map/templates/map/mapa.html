@@ -51,5 +51,19 @@
             </a>
         </div>
     </nav>
+
+<script>
+        // Obtém a localização do usuário atráves do navegador e envia para o backend
+    if (!localStorage.getItem("localizacaoRecebida")) { // Armazena uma localStorage de que as informações de coordenada do usuário já foram enviadas
+        navigator.geolocation.getCurrentPosition(position => { // Garantindo que não haja load infinito
+            let latitude = position.coords.latitude;
+            let longitude = position.coords.longitude;
+            localStorage.setItem("localizacaoRecebida", "true");
+            window.location.href = `?lat_user=${latitude}&lon_user=${longitude}`;
+        });
+    }
+</script>
+
 </body>
+
 </html>
