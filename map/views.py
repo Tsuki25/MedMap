@@ -57,7 +57,7 @@ def criar_mapa(request):
             "latitude": unidade.endereco.latitude,
             "longitude": unidade.endereco.longitude,
             "endereco": unidade.endereco.__str__(),
-            "planos_saude": ", ".join([convenio.nome_convenio for convenio in unidade.convenio.all()]),
+            "planos_saude": ", ".join([convenio.nome_convenio for convenio in unidade.convenios.all()]),
             "horario_atendimento": unidade.horario_atendimento,
             "tempo_medio": unidade.tempo_medio_espera,
             "fila": unidade.lotacao_atual,

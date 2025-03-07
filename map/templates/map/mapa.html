@@ -53,15 +53,30 @@
     </nav>
 
 <script>
-        // Obtém a localização do usuário atráves do navegador e envia para o backend
-    if (!localStorage.getItem("localizacaoRecebida")) { // Armazena uma localStorage de que as informações de coordenada do usuário já foram enviadas
-        navigator.geolocation.getCurrentPosition(position => { // Garantindo que não haja load infinito
+    // Obtém a localização do usuário atráves do navegador e envia para o backend
+    function atualizarLocalizacao() {
+        navigator.geolocation.getCurrentPosition(position => {
             let latitude = position.coords.latitude;
             let longitude = position.coords.longitude;
-            localStorage.setItem("localizacaoRecebida", "true");
-            window.location.href = `?lat_user=${latitude}&lon_user=${longitude}`;
+            console.log(`Localização atualizada: Latitude ${latitude}, Longitude ${longitude}`);
+
+            // Atualiza a URL sem recarregar a página
+            const novaURL = new URL(window.location.href);
+            novaURL.searchParams.set('lat_user', latitude);
+            novaURL.searchParams.set('lon_user', longitude);
+            window.history.replaceState({}, '', novaURL);
+        }, error => {
+            console.error('Erro ao obter localização:', error);
         });
     }
+
+    // Atualiza imediatamente ao carregar a página
+    atualizarLocalizacao();
+
+    // Atualiza a cada 5 minutos (300.000 ms)
+    setInterval(atualizarLocalizacao, 300000);
+
+
 </script>
 
 </body>
