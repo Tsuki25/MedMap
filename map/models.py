@@ -61,10 +61,18 @@ class Triagem(models.Model):
     temperatura = models.DecimalField(max_digits=3, decimal_places=1)
     pressao_sistolica = models.IntegerField()
     pressao_diastolica = models.IntegerField()
-    gravidez = models.IntegerField()
+    gravidade = models.IntegerField()
     horario_realizacao = models.TimeField()
     data_realizacao = models.DateField()
     sintomas = models.ManyToManyField(Sintoma)
 
     def __str__(self):
         return f"{self.usuario.nome_usuario} - {self.data_realizacao} - {self.horario_realizacao} "
+
+class Doenca(models.Model):
+    nome_doenca = models.CharField(max_length=75)
+    gravidade_doenca = models.IntegerField()
+    sintomas_doenca = models.ManyToManyField(Sintoma)
+
+    def __str__(self):
+        return f"{self.nome_doenca}"
