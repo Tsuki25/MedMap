@@ -24,7 +24,6 @@ class UnidadeAtendimento(models.Model):
     horario_atendimento = models.CharField(max_length=75)
     especialidade = models.CharField(max_length=120)
     lotacao_atual = models.IntegerField()
-    tempo_medio_espera = models.TimeField()
     convenios = models.ManyToManyField(Convenio)
     endereco = models.OneToOneField(Endereco, on_delete=models.CASCADE, related_name="unidade_atendimento")
 
@@ -51,6 +50,7 @@ class Condicao(models.Model):
 
 class Sintoma(models.Model):
     nome_sintoma = models.CharField(max_length=45)
+    parte_corpo = models.CharField(max_length=45)
 
     def __str__(self):
         return self.nome_sintoma
