@@ -1,0 +1,46 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Triagem</title>
+        <link rel="stylesheet" href={% static "triagem/css/triagem_style.css" %}>
+        <script src="{% static 'triagem/js/triagem_funcs.js' %}" defer></script>
+    </head>
+    <body>
+        <main>
+            <div class="container">
+                <div class="grid">
+                    <div class="parteCorpo" onclick="mostrarSintomas('cabeca')">Cabeça</div>
+                    <div class="parteCorpo" onclick="mostrarSintomas('tronco')">Tronco</div>
+                    <div class="parteCorpo" onclick="mostrarSintomas('braco')">Braço</div>
+                    <div class="parteCorpo" onclick="mostrarSintomas('perna')">Perna</div>
+                </div>
+            </div>
+
+            <form method="post">
+                {% csrf_token %}
+                {% for parte, sintomas in sintomas_por_parte.items %}
+                    <div class="sintomas" id="{{ parte }}">
+                        <div class="listaSintomas">
+                            <div class="opcoesSintomas">
+                                {% for sintoma in sintomas %}
+                                    <label>
+                                        <input type="checkbox" name="sintomas_partes" value="{{ sintoma.id }}">
+                                        {{ sintoma.nome_sintoma }}
+                                    </label>
+                                {% endfor %}
+                            </div>
+                            <button type="button" onclick="fecharSintomas()">Voltar</button>
+                        </div>
+                    </div>
+                {% endfor %}
+
+                <div class="container">
+                    <button type="submit" class="btn btn-primary">Finalizar Triagem</button>
+                </div>
+            </form>
+        </main>
+    </body>
+</html>

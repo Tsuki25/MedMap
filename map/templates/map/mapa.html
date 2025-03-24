@@ -1,84 +1,81 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'map/css/map_style.css' %}">
-    <title>MedMap: Hospitais Próximos</title>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="{% static 'map/css/map_style.css' %}">
+        <title>MedMap: Hospitais Próximos</title>
 
-</head>
-<body>
-    <main>
-        <div id="map">
-            {{ mapa_html|safe }}
-        </div>
+    </head>
+    <body>
+        <main>
+            <div id="map">
+                {{ mapa_html|safe }}
+            </div>
 
-        <div id="sidebar">
-            <h3>Hospitais Mais Próximos</h3>
-            {% for hospital in hospitais_proximos %}
-                <div class="hospital-item">
-                    <h4>{{ hospital.nome }}</h4>
-                    <p><strong>Endereço:</strong> {{ hospital.endereco }}</p>
-                    <p><strong>Planos de Saúde:</strong> {{ hospital.planos_saude }}</p>
-                    <p><strong>Horário:</strong> {{ hospital.horario_atendimento }}</p>
-                    <p><strong>Tempo médio:</strong> {{ hospital.tempo_medio }}</p>
-                    <p><strong>Fila:</strong> {{ hospital.fila }}</p>
-                    <p><strong>Especialidade:</strong> {{ hospital.especialidade }}</p>
-                    <p><strong>Distância:</strong> {{ hospital.distancia|floatformat:2 }} km</p>
-                </div>
-            {% endfor %}
-        </div>
-    </main>
+            <div id="sidebar">
+                <h3>Hospitais Mais Próximos</h3>
+                {% for hospital in hospitais_proximos %}
+                    <div class="hospital-item">
+                        <h4>{{ hospital.nome }}</h4>
+                        <p><strong>Endereço:</strong> {{ hospital.endereco }}</p>
+                        <p><strong>Planos de Saúde:</strong> {{ hospital.planos_saude }}</p>
+                        <p><strong>Horário:</strong> {{ hospital.horario_atendimento }}</p>
+                        <p><strong>Fila:</strong> {{ hospital.fila }}</p>
+                        <p><strong>Especialidade:</strong> {{ hospital.especialidade }}</p>
+                        <p><strong>Distância:</strong> {{ hospital.distancia|floatformat:2 }} km</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </main>
 
-    <nav>
-        <div class="navbar-item">
-            <a>
-                <i class="fa-solid fa-map-location-dot"></i> Mapa
-            </a>
-        </div>
+        <nav>
+            <div class="navbar-item">
+                <a>
+                    <i class="fa-solid fa-map-location-dot"></i> Mapa
+                </a>
+            </div>
 
-        <div class="navbar-item">
-            <a>
-                <i class="fa-solid fa-clipboard-list"></i> Triagem
-            </a>
-        </div>
+            <div class="navbar-item">
+                <a href={% url "map:triagem_create" %}>
+                    <i class="fa-solid fa-clipboard-list"></i> Triagem
+                </a>
+            </div>
 
-        <div class="navbar-item">
-            <a>
-                <i class="fa-solid fa-circle-user"></i> Meu Perfil
-            </a>
-        </div>
-    </nav>
+            <div class="navbar-item">
+                <a href={% url "map:login" %}>
+                    <i class="fa-solid fa-circle-user"></i> Meu Perfil
+                </a>
+            </div>
+        </nav>
 
-<script>
-    // Obtém a localização do usuário atráves do navegador e envia para o backend
-    function atualizarLocalizacao() {
-        navigator.geolocation.getCurrentPosition(position => {
-            let latitude = position.coords.latitude;
-            let longitude = position.coords.longitude;
-            console.log(`Localização atualizada: Latitude ${latitude}, Longitude ${longitude}`);
+        <script>
+            // Obtém a localização do usuário atráves do navegador e envia para o backend
+            function atualizarLocalizacao() {
+                navigator.geolocation.getCurrentPosition(position => {
+                    let latitude = position.coords.latitude;
+                    let longitude = position.coords.longitude;
+                    console.log(`Localização atualizada: Latitude ${latitude}, Longitude ${longitude}`);
 
-            // Atualiza a URL sem recarregar a página
-            const novaURL = new URL(window.location.href);
-            novaURL.searchParams.set('lat_user', latitude);
-            novaURL.searchParams.set('lon_user', longitude);
-            window.history.replaceState({}, '', novaURL);
-        }, error => {
-            console.error('Erro ao obter localização:', error);
-        });
-    }
+                    // Atualiza a URL sem recarregar a página
+                    const novaURL = new URL(window.location.href);
+                    novaURL.searchParams.set('lat_user', latitude);
+                    novaURL.searchParams.set('lon_user', longitude);
+                    window.history.replaceState({}, '', novaURL);
+                }, error => {
+                    console.error('Erro ao obter localização:', error);
+                });
+            }
 
-    // Atualiza imediatamente ao carregar a página
-    atualizarLocalizacao();
+            // Atualiza imediatamente ao carregar a página
+            atualizarLocalizacao();
 
-    // Atualiza a cada 5 minutos (300.000 ms)
-    setInterval(atualizarLocalizacao, 300000);
+            // Atualiza a cada 5 minutos (300.000 ms)
+            setInterval(atualizarLocalizacao, 300000);
 
 
-</script>
-
-</body>
-
+        </script>
+    </body>
 </html>

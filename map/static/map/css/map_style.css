@@ -70,7 +70,9 @@ nav {
 }
 
 .navbar-item a, i{
+    text-decoration: none;
     font-size: 2rem;
+
 }
 
 .navbar-item:hover{

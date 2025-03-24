@@ -1,3 +1,4 @@
+from django.contrib.auth.hashers import make_password
 from django.db import models
 
 class Convenio(models.Model):
@@ -33,11 +34,19 @@ class UnidadeAtendimento(models.Model):
 class Usuario(models.Model):
     nome_usuario = models.CharField(max_length=45)
     sobrenome_usuario = models.CharField(max_length=100)
+    email = models.EmailField(max_length=120, null=True)
+    senha = models.CharField(max_length=128)
     dt_nasc = models.DateField()
     altura = models.DecimalField(max_digits=3, decimal_places=2)
-    dt_cadastro = models.DateField()
+    dt_cadastro = models.DateField(auto_now_add=True)
     convenio = models.ForeignKey(Convenio, on_delete=models.SET_NULL, null=True, blank=True)
     condicoes = models.ManyToManyField('Condicao')
+
+    def save(self, *args, **kwargs):
+        # Criptografa a senha antes de salvar.
+        if self.senha and not self.senha.startswith('pbkdf2_sha256$'):
+            self.senha = make_password(self.senha)
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.nome_usuario
@@ -61,9 +70,9 @@ class Triagem(models.Model):
     temperatura = models.DecimalField(max_digits=3, decimal_places=1)
     pressao_sistolica = models.IntegerField()
     pressao_diastolica = models.IntegerField()
-    gravidade = models.IntegerField()
-    horario_realizacao = models.TimeField()
-    data_realizacao = models.DateField()
+    gravidade = models.IntegerField(null=True)
+    horario_realizacao = models.TimeField(auto_now_add=True)
+    data_realizacao = models.DateField(auto_now_add=True)
     sintomas = models.ManyToManyField(Sintoma)
 
     def __str__(self):

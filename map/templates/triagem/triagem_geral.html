@@ -1,0 +1,32 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+    <head>
+        <meta charset="UTF-8">
+        <title>Triagem</title>
+    </head>
+
+    <body>
+        <form method="post" action="{% url 'map:triagem_create' %}">
+            {% csrf_token %}
+            <label for="peso">Peso:</label>
+            <input type="text" id="peso" name="peso" required>
+
+            <label for="temperatura">Temperatura:</label>
+            <input type="text" id="temperatura" name="temperatura" required>
+
+            <label for="pressao_sistolica">Pressão Sistolica:</label>
+            <input type="text" id="pressao_sistolica" name="pressao_sistolica" required>
+
+            <label for="pressao_diastolica">Pressão Diastolica:</label>
+            <input type="text" id="pressao_diastolica" name="pressao_diastolica" required>
+            <br><br>
+
+            {% for sintoma in sintomas_gerais %}
+               <label><input type="checkbox" class="sintoma" name="sintomas_gerais" value="{{ sintoma.id }}">{{ sintoma.nome_sintoma }}</label><br>
+            {% endfor %}
+
+            <button type="submit">Próximo</button>
+        </form>
+    </body>
+</html>
