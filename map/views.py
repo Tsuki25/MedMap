@@ -8,7 +8,7 @@ import folium
 from folium.plugins import LocateControl
 
 from .forms import LoginForm
-from .models import UnidadeAtendimento, Triagem, Sintoma, Usuario
+from .models import UnidadeAtendimento, Triagem, Sintoma, Usuario, Doenca
 
 
 class LoginView(FormView):
@@ -86,6 +86,7 @@ class MapaUnidadesView(TemplateView):
                 "horario_atendimento": unidade.horario_atendimento,
                 "fila": unidade.lotacao_atual,
                 "especialidade": unidade.especialidade,
+                "nivel_atendimento": unidade.nivel_atendimento,
                 "distancia": distancia
             })
 
@@ -94,23 +95,45 @@ class MapaUnidadesView(TemplateView):
     def get_context_data(self, **kwargs):
         # Monta o contexto do template, incluindo o mapa renderizado.
         context = super().get_context_data(**kwargs)
+        triagem_id = kwargs.get('triagem')
         coordenadas_usuario = self.get_user_coordinates()
 
         mapa = folium.Map(location=coordenadas_usuario, zoom_start=13)
         LocateControl(auto_start=True, keepCurrentZoomLevel=True, drawMarker=True, icon="fa-user", prefix="fa",
                       strings={"title": "Sua localização"}).add_to(mapa)
 
-        unidades_ordenadas = self.get_unidades_ordenadas(coordenadas_usuario)
-        unidades_mais_proximas = unidades_ordenadas[:5]
-        unidades_carregadas = unidades_ordenadas[:100]
+        unidades_ordenadas = self.get_unidades_ordenadas(coordenadas_usuario) #Ordena as unidades pela distancia
+        unidades_carregadas = unidades_ordenadas[:100] #Carrega sempre as 100 unidades mais proximas
+        context_unidades_recomendadas = []
 
-        for i, unidade in enumerate(unidades_carregadas):
-            cor = "orange" if i < 5 else "red"
-            self.adicionar_ponto_unidade(mapa, unidade, cor)
+        if triagem_id:
+            triagem = Triagem.objects.get(id=triagem_id)
+            unidades_recomendadas = UnidadeAtendimento.objects.filter(nivel_atendimento=triagem.gravidade, convenios=triagem.usuario.convenio)
+
+
+            for unidade in unidades_carregadas:
+                for unidade_recomendada in unidades_recomendadas:
+                    if unidade_recomendada.endereco.latitude == unidade['latitude'] and unidade_recomendada.endereco.longitude == unidade['longitude']:
+                        context_unidades_recomendadas.append(unidade)
+                        cor = "green"
+                        break
+
+                    cor = "red"
+
+                self.adicionar_ponto_unidade(mapa, unidade, cor)
+
+            context["hospitais_recomendados"] = context_unidades_recomendadas[:5]
+
+        else:
+            unidades_mais_proximas = unidades_ordenadas[:5]
+
+            for i, unidade in enumerate(unidades_carregadas):
+                cor = "orange" if i < 5 else "red"
+                self.adicionar_ponto_unidade(mapa, unidade, cor)
+
+            context["hospitais_recomendados"] = unidades_mais_proximas
 
         context["mapa_html"] = mapa._repr_html_()
-        context["hospitais_proximos"] = unidades_mais_proximas
-
         return context
 
 
@@ -161,6 +184,34 @@ class TriagemUpdateView(UpdateView):
         }
         return context
 
+    def identificar_doenca(self, id_triagem):
+        triagem = Triagem.objects.get(id=id_triagem)
+        sintomas_triagem = set(triagem.sintomas.all()) # Pega os sintomas referente a triagem recem realizada
+        doencas = Doenca.objects.prefetch_related('sintomas_doenca').all() # Pega todos as doencas cadastradas
+
+        # Utilizatemos a intersecção dos dois conjuntos para calcular o numero de sintomas em comum entre a doenca e a triagem
+        # Em seguida dividiremos este valor pelos sintomas da doenca para obter um valor númerico referente a porcentagem de sintomas atingido
+        # Dessa forma teremos um valor númerico para trabalhar e encontrar a gravidade da doença
+        # considera os sintomas similares em relação a todos os sintomas da doença + do
+
+        doenca_aproximada = None
+        maior_similaridade = 0
+
+        for doenca in doencas:
+            sintomas_doenca = set(doenca.sintomas_doenca.all())
+
+            sintomas_em_comum = sintomas_triagem & sintomas_doenca
+
+            if sintomas_doenca:  # Evita divisão por zero
+                similaridade = len(sintomas_em_comum) / len(sintomas_doenca)
+
+                if similaridade > maior_similaridade:
+                    maior_similaridade = similaridade
+                    doenca_aproximada = doenca
+
+        return doenca_aproximada
+
+
     def form_valid(self, form):
         # Aqui você pode lidar com os sintomas específicos, que foram selecionados no segundo formulário
         triagem = form.save()
@@ -173,8 +224,12 @@ class TriagemUpdateView(UpdateView):
             sintoma_obj = Sintoma.objects.get(id=sintoma)
             triagem.sintomas.add(sintoma_obj)
 
+        doenca = self.identificar_doenca(triagem.id)
+        triagem.gravidade = doenca.gravidade_doenca
+        triagem.save()
+
         return super().form_valid(form)
 
     def get_success_url(self):
         # Redireciona para uma página de confirmação ou outra view
-        return reverse_lazy('map:mapa')
+        return reverse_lazy('map:mapa_unidades_recomendadas', kwargs={'triagem': self.object.pk})

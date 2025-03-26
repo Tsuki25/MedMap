@@ -25,11 +25,12 @@ class UnidadeAtendimento(models.Model):
     horario_atendimento = models.CharField(max_length=75)
     especialidade = models.CharField(max_length=120)
     lotacao_atual = models.IntegerField()
+    nivel_atendimento = models.IntegerField()
     convenios = models.ManyToManyField(Convenio)
     endereco = models.OneToOneField(Endereco, on_delete=models.CASCADE, related_name="unidade_atendimento")
 
     def __str__(self):
-        return self.nome
+        return f"{self.nome}, Nivel: {self.nivel_atendimento}"
 
 class Usuario(models.Model):
     nome_usuario = models.CharField(max_length=45)
