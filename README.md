@@ -32,6 +32,18 @@ A plataforma permite que pacientes consultem **unidades médicas próximas**, ve
 
 ---
 
+# Instalação das Dependências
+
+Para instalar todas as dependências do projeto, execute o seguinte comando no terminal:
+
+```sh
+pip install -r requirements.txt
+```
+
+Isso garantirá que todas as dependências necessárias estejam corretamente instaladas.
+
+---
+
 ## 👨‍💻 Autor
 Desenvolvido por **Cauê Pacheco Palma**, **Eduardo Ferreira Silva** e **Luca Vianna Martins** estudantes de **Análise e Desenvolvimento de Sistemas** (Previsão de formatura: Julho/2025).  
 
