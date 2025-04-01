@@ -110,3 +110,5 @@ STATICFILES_DIRS = [
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+X_FRAME_OPTIONS = 'SAMEORIGIN' # Permite o carregamento de dados em um iframe, no caso o Folium, desde que seja do mesmo dominio

@@ -1,8 +1,10 @@
 from django.contrib import messages
 from django.contrib.auth.hashers import check_password
-from django.urls import reverse_lazy
+from django.http import HttpResponse
+from django.urls import reverse_lazy, reverse
+from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView, CreateView, UpdateView, FormView
-from django.shortcuts import render
+from django.shortcuts import redirect, get_object_or_404
 from geopy.distance import geodesic
 import folium
 from folium.plugins import LocateControl
@@ -48,25 +50,50 @@ class MapaUnidadesView(TemplateView):
 
     def adicionar_ponto_unidade(self, mapa, unidade, cor_marcador):
         # Adiciona um marcador de unidade de atendimento ao mapa.
+
+        status_mapping = {
+            1: "😡 Muito Longa",
+            2: "🙁 Longa",
+            3: "😐 Razoável",
+            4: "🙂 Rápida",
+            5: "😃 Muito Rápida"
+        }
+        status_lotacao = status_mapping.get(unidade['fila'], "❓ Desconhecido")
+
         descricao_completa = f"""
-        <div style='width: 200px;'>
-            <h4 style='margin-bottom: 10px;'>{unidade['nome']}</h4>
-            <ul style='list-style-type: none; padding-left: 0;'>
-                <li><strong>Endereço:</strong> {unidade['endereco']}</li>
-                <li><strong>Planos de Saúde:</strong> {unidade['planos_saude']}</li>
-                <li><strong>Horário:</strong> {unidade['horario_atendimento']}</li>
-                <li><strong>Fila:</strong> {unidade['fila']}</li>
-                <li><strong>Especialidade:</strong> {unidade['especialidade']}</li>
-                <li><strong>Distância:</strong> {unidade['distancia']:.2f} km</li>
-            </ul>
-        </div>
-        """
+                <div style='width: 250px; font-size:14px'>
+                    <h4 style='margin-bottom: 10px;'>{unidade['nome']}</h4>
+                    <ul style='list-style-type: none; padding-left: 0;'>
+                        <li><strong>Endereço:</strong> {unidade['endereco']}</li>
+                        <li><strong>Planos de Saúde:</strong> {unidade['planos_saude']}</li>
+                        <li><strong>Horário:</strong> {unidade['horario_atendimento']}</li>
+                        <li><strong>Status Lotação:</strong> {status_lotacao}</li>
+                        <li><strong>Especialidade:</strong> {unidade['especialidade']}</li>
+                        <li><strong>Distância:</strong> {unidade['distancia']:.2f} km</li>
+                    </ul>
+            """
+
+        if unidade['distancia'] <= 2:  # Verifica se a distância é menor que 2km
+            url_base = reverse('map:avaliar_unidade')  # Obtém a URL no backend Django
+            descricao_completa += f"""
+                    <div style='display: flex; align-items: center;text-align:center; width=100% '>
+                        <strong><p style='margin-right: 3px;font-size:14px;'>Como está a fila?</p></strong>
+                        <a href="{url_base}?unidade_id={unidade['id']}&avaliacao=1" style='font-size:18px; text-decoration:none'>😡</a>
+                        <a href="{url_base}?unidade_id={unidade['id']}&avaliacao=2" style='font-size:18px; text-decoration:none'>🙁</a>
+                        <a href="{url_base}?unidade_id={unidade['id']}&avaliacao=3" style='font-size:18px; text-decoration:none'>😐</a>
+                        <a href="{url_base}?unidade_id={unidade['id']}&avaliacao=4" style='font-size:18px; text-decoration:none'>🙂</a>
+                        <a href="{url_base}?unidade_id={unidade['id']}&avaliacao=5" style='font-size:18px; text-decoration:none'>😃</a>
+                    </div>    
+                    """
+
+        descricao_completa += "</div>"  # Fecha a descrição completa
 
         folium.Marker(
             location=[unidade["latitude"], unidade["longitude"]],
             popup=folium.Popup(descricao_completa, max_width=300),
             icon=folium.Icon(color=cor_marcador, icon='fa-hospital', prefix='fa')
         ).add_to(mapa)
+
 
     def get_unidades_ordenadas(self, coordenadas_usuario):
         # Busca as unidades de atendimento e as ordena pela distância do usuário.
@@ -78,6 +105,7 @@ class MapaUnidadesView(TemplateView):
             distancia = geodesic(coordenadas_usuario, coordenadas_unidade).km
 
             unidades_distancia.append({
+                "id": unidade.id,
                 "nome": unidade.nome,
                 "latitude": unidade.endereco.latitude,
                 "longitude": unidade.endereco.longitude,
@@ -106,7 +134,7 @@ class MapaUnidadesView(TemplateView):
         unidades_carregadas = unidades_ordenadas[:100] #Carrega sempre as 100 unidades mais proximas
         context_unidades_recomendadas = []
 
-        if triagem_id:
+        if triagem_id: # Se recebeu via get o atributo triagem_id então carrega as unidades recomendadas pela triagem em uma cor diferente
             triagem = Triagem.objects.get(id=triagem_id)
             unidades_recomendadas = UnidadeAtendimento.objects.filter(nivel_atendimento=triagem.gravidade, convenios=triagem.usuario.convenio)
 
@@ -135,7 +163,6 @@ class MapaUnidadesView(TemplateView):
 
         context["mapa_html"] = mapa._repr_html_()
         return context
-
 
 class TriagemCreateView(CreateView):
     template_name = "triagem/triagem_geral.html"
@@ -233,3 +260,17 @@ class TriagemUpdateView(UpdateView):
     def get_success_url(self):
         # Redireciona para uma página de confirmação ou outra view
         return reverse_lazy('map:mapa_unidades_recomendadas', kwargs={'triagem': self.object.pk})
+
+def avaliar_unidade_get(request):
+    unidade_id = request.GET.get('unidade_id')
+    avaliacao = request.GET.get('avaliacao')
+    return_url = request.META.get('HTTP_REFERER', reverse('map:mapa'))  # Pega a URL anterior ou usa 'mapa' como padrão
+    script = f"<script>window.parent.location.href = '{return_url}';</script>"
+
+    if unidade_id and avaliacao:
+        unidade = get_object_or_404(UnidadeAtendimento, id=unidade_id)
+        unidade.lotacao_atual = int(avaliacao)
+        unidade.save()
+
+    #return redirect(return_url)
+    return HttpResponse(script)
