@@ -45,7 +45,7 @@ Isso garantirá que todas as dependências necessárias estejam corretamente ins
 ---
 
 ## 👨‍💻 Autor
-Desenvolvido por **Cauê Pacheco Palma**, **Eduardo Ferreira Silva** e **Luca Vianna Martins** estudantes de **Análise e Desenvolvimento de Sistemas** (Previsão de formatura: Julho/2025).  
+Desenvolvido por **Cauê Pacheco Palma**, **Eduardo Ferreira Silva** e **Luca Vianna Martins Silveira** estudantes de **Análise e Desenvolvimento de Sistemas** (Previsão de formatura: Julho/2025).  
 
 ---
 
