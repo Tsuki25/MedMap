@@ -3,30 +3,60 @@
 <html lang="pt-br">
     <head>
         <meta charset="UTF-8">
-        <title>Triagem</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Pré Triagem - Sinais vitais</title>
+        <link rel="stylesheet" href={% static "triagem/css/triagem_pt1_style.css" %}>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz@0,14..32;1,14..32&display=swap" rel="stylesheet">
     </head>
 
     <body>
-        <form method="post" action="{% url 'map:triagem_create' %}">
-            {% csrf_token %}
-            <label for="peso">Peso:</label>
-            <input type="text" id="peso" name="peso" required>
+        <!-- Cabeçalho -->
+        <header class="header">
+            <h1>Pré Triagem - Sinais Vitais</h1>
+        </header>
 
-            <label for="temperatura">Temperatura:</label>
-            <input type="text" id="temperatura" name="temperatura" required>
+        <!-- Barra de progresso -->
+        <div class="progress-bar">
+            <div class="progress-indicator"></div>
+        </div>
 
-            <label for="pressao_sistolica">Pressão Sistolica:</label>
-            <input type="text" id="pressao_sistolica" name="pressao_sistolica" required>
+        <main>
+            <form id="pretriage-form" method="post" action="{% url 'map:triagem_create' %}">
+                {% csrf_token %}
+                <!-- Seção de Sinais Vitais -->
+                <div class="sinais-vitais">
+                    <div class="form-group">
+                        <label for="peso">Peso:</label>
+                        <input type="number" name="peso" required placeholder="Ex: 80kg">
+                    </div>
+                    <div class="form-group">
+                        <label for="temperatura">Temperatura:</label>
+                        <input type="number" name="temperatura" required placeholder="Ex: 36.5°C" step="0.1">
+                    </div>
+                    <div class="form-group">
+                        <label for="pressao_sistolica">Pressão Sistólica:</label>
+                        <input type="number" name="pressao_sistolica" required placeholder="Ex: 120mmhg">
+                    </div>
+                    <div class="form-group">
+                        <label for="pressao_diastolica">Pressão Diastólica:</label>
+                        <input type="number" name="pressao_diastolica" required placeholder="Ex: 80mmhg">
+                    </div>
+                </div>
 
-            <label for="pressao_diastolica">Pressão Diastolica:</label>
-            <input type="text" id="pressao_diastolica" name="pressao_diastolica" required>
-            <br><br>
-
-            {% for sintoma in sintomas_gerais %}
-               <label><input type="checkbox" class="sintoma" name="sintomas_gerais" value="{{ sintoma.id }}">{{ sintoma.nome_sintoma }}</label><br>
-            {% endfor %}
-
-            <button type="submit">Próximo</button>
-        </form>
+                <!-- Seção de Sintomas -->
+                <div class="sintomas-section">
+                    <h2>Sintomas</h2>
+                    <div class="opcoes-sintomas">
+                        {% for sintoma in sintomas_gerais %}
+                            <label><input type="checkbox" class="sintoma" name="sintomas_gerais" value="{{ sintoma.id }}">{{ sintoma.nome_sintoma }}</label><br>
+                        {% endfor %}
+                    </div>
+                </div>
+                <!-- Botão Avançar -->
+                <button type="submit" class="button-avancar">Avançar</button>
+            </form>
+        </main>
     </body>
 </html>

@@ -5,25 +5,39 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Triagem</title>
-        <link rel="stylesheet" href={% static "triagem/css/triagem_style.css" %}>
+        <link rel="stylesheet" href={% static "triagem/css/triagem_pt2_style.css" %}>
         <script src="{% static 'triagem/js/triagem_funcs.js' %}" defer></script>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz@0,14..32;1,14..32&display=swap" rel="stylesheet">
     </head>
     <body>
-        <main>
-            <div class="container">
-                <div class="grid">
-                    <div class="parteCorpo" onclick="mostrarSintomas('cabeca')">Cabeça</div>
-                    <div class="parteCorpo" onclick="mostrarSintomas('tronco')">Tronco</div>
-                    <div class="parteCorpo" onclick="mostrarSintomas('braco')">Braço</div>
-                    <div class="parteCorpo" onclick="mostrarSintomas('perna')">Perna</div>
-                </div>
-            </div>
+        <!-- Cabeçalho -->
+        <header class="header">
+            <h1>Pré Triagem</h1>
+        </header>
 
+        <!-- Barra de progresso vertical -->
+        <div class="progress-bar">
+            <div class="progress-indicator"></div>
+        </div>
+
+        <main>
             <form method="post">
-                {% csrf_token %}
+            {% csrf_token %}
+                <p class="instruction">Selecione uma parte do corpo</p>
+                <div class="container">
+                    <div class="grid">
+                        <div class="parteCorpo" onclick="mostrarSintomas('cabeca')">Cabeça</div>
+                        <div class="parteCorpo" onclick="mostrarSintomas('tronco')">Tronco</div>
+                        <div class="parteCorpo" onclick="mostrarSintomas('bracos')">Braços</div>
+                        <div class="parteCorpo" onclick="mostrarSintomas('pernas')">Pernas</div>
+                    </div>
+                </div>
+
+
                 {% for parte, sintomas in sintomas_por_parte.items %}
                     <div class="sintomas" id="{{ parte }}">
                         <div class="listaSintomas">
+                            <h2>Sintomas das {{ parte }}</h2>
                             <div class="opcoesSintomas">
                                 {% for sintoma in sintomas %}
                                     <label>
@@ -37,9 +51,7 @@
                     </div>
                 {% endfor %}
 
-                <div class="container">
-                    <button type="submit" class="btn btn-primary">Finalizar Triagem</button>
-                </div>
+                <button type="submit" class="button-avancar">Avançar</button>
             </form>
         </main>
     </body>

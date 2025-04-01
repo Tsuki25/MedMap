@@ -3,7 +3,7 @@
     padding: 0;
     box-sizing: border-box;
     font-size: 12px;
-    font-family: Bahnschrift, Arial, sans-serif;
+    font-family: Inter, Helvetica, sans-serif;
 }
 
 body {
@@ -24,7 +24,7 @@ main {
 
 #sidebar {
     flex: 1;
-    background-color: #8abaf9;
+    background-color: #b1cba7;
     padding: 10px;
     overflow-y: auto;
     box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
@@ -55,7 +55,7 @@ nav {
     flex-direction: row;
     align-items: center;
     justify-content: space-around;
-    background-color: #181860;
+    background-color: #5c8c26;
     position: fixed; /* Pode ajustar para fixed, se necessário */
     bottom: 0;
     width: 100%;
@@ -72,9 +72,12 @@ nav {
 .navbar-item a, i{
     text-decoration: none;
     font-size: 2rem;
-
 }
 
-.navbar-item:hover{
-    color: #8abaf9;
+.navbar-item a:visited {
+    color: white;
+}
+
+.navbar-item a:hover{
+    color: #8ad93b;
 }

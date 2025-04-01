@@ -179,8 +179,8 @@ class TriagemUpdateView(UpdateView):
         context['sintomas_por_parte'] = {
             'cabeca': Sintoma.objects.filter(parte_corpo="Cabeça"),
             'tronco': Sintoma.objects.filter(parte_corpo="Tronco"),
-            'braco': Sintoma.objects.filter(parte_corpo="Braços"),
-            'perna': Sintoma.objects.filter(parte_corpo="Pernas"),
+            'bracos': Sintoma.objects.filter(parte_corpo="Braços"),
+            'pernas': Sintoma.objects.filter(parte_corpo="Pernas"),
         }
         return context
 

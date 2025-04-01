@@ -1,36 +1,43 @@
-// mostra sintomas da parte do corpo selecionada
-function mostrarSintomas(parteCorpo) {
-    // removendo sintomas abertos antes de exibir outros sintomas
-    const sintomas = document.querySelectorAll('.sintomas')
-    sintomas.forEach(s => s.classList.remove('show'))
+// Exibe os sintomas da parte do corpo com base no botão clicaco
+function mostrarSintomas(parteCorpoId) {
+    // Fecha qualquer modal que já esteja aberto
+    const modals = document.querySelectorAll('.sintomas')
+    modals.forEach(modal => modal.classList.remove('show'))
 
-    // obter a div .parteCorpo que foi clicada
-    const divParteCorpo = document.querySelector(`.parteCorpo[onclick*="${parteCorpo}"]`)
-    const divSintomas = document.getElementById(parteCorpo)
+    // Localiza o modal e o botão correspondente à parte do corpo
+    const modal = document.getElementById(parteCorpoId)
+    const buttonElement = document.querySelector(`.parteCorpo[onclick*="${parteCorpoId}"]`)
 
-    // pegar a posição da div .parteCorpo
-    const rect = divParteCorpo.getBoundingClientRect()
+    if (!modal || !buttonElement) {
+        console.error("Elemento não encontrado para: ", parteCorpoId)
+        return
+    }
 
-    // definir a posição da div .sintomas no lugar da div .parteCorpo
-    divSintomas.style.top = `${rect.top + window.scrollY}px`
-    divSintomas.style.left = `${rect.left + window.scrollX}px`
-    divSintomas.style.width = `${rect.width}px`
-    divSintomas.style.height = `${rect.height}px`
+    // Obtém a posição e o tamanho do botão clicado
+    const rect = buttonElement.getBoundingClientRect()
+    modal.style.top = `${rect.top + window.scrollY}px`
+    modal.style.left = `${rect.left + window.scrollX}px`;
+    modal.style.width = `${rect.width}px`;
+    modal.style.height = `${rect.height}px`;
 
-    // mostrar sintomas
-    divSintomas.classList.add('show')
+    //Exibe o modal com a transição do CSS
+    modal.classList.add('show')
 
-    // travar rolagem do eixo Y
+    // Trava rolagem da grid
     const grid = document.querySelector('.grid')
-    grid.style.overflow = 'hidden'
+    if (grid) {
+        grid.style.overflow = 'hidden'
+    }
 }
 
-// fecha sintomas com botão "voltar"
+// Fecha os modais de sintomas
 function fecharSintomas() {
-    let sintomas = document.querySelectorAll('.sintomas')
-    sintomas.forEach(s => s.classList.remove('show'))
+    const modals = document.querySelectorAll('.sintomas')
+    modals.forEach(modal => modal.classList.remove('show'))
 
-    // libera a rolagem do eixo Y
+    // Libera a rolagem da grid
     const grid = document.querySelector('.grid')
-    grid.style.overflow = 'auto' // Restaura o scroll padrão
+    if (grid) {
+        grid.style.overflow = 'auto'
+    }
 }

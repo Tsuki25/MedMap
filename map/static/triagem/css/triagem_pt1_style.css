@@ -1,0 +1,156 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Inter, Helvetica, sans-serif;
+    background-color: #f5f5f5;
+    overflow-y: auto;
+    position: relative;
+}
+
+.header {
+    background-color: #8ad93b;
+    color: #fff;
+    text-align: center;
+    padding: 15px;
+}
+
+.progress-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 18px;
+    height: 100%;
+    background-color: #e0e0e0;
+    display: flex;
+    align-items: start;
+    justify-content: center;
+    z-index: 10;
+}
+
+.progress-indicator {
+    width: 10px;
+    height: 50%;
+    background-color: #8ad93b;
+    border-radius: 5px;
+}
+
+main {
+    width: 100%;
+    padding: 20px;
+    padding-bottom: 100px;
+    margin-top: 20px;
+}
+
+form {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.sinais-vitais {
+    display: grid;
+    grid-template-columns: repeat 1fr;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.form-group input {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 100%;
+    max-width: 150px;
+}
+
+.sintomas-section {
+    margin-bottom: 30px;
+}
+
+.sintomas-section h2 {
+    font-size: 1.2em;
+    margin-bottom: 10px;
+}
+
+.opcoes-sintomas {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.opcoes-sintomas label{
+    display: flex;
+    align-items: center;
+
+}
+
+.opcoes-sintomas input{
+    margin-right: 5px;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border: 2px solid #8ad93b;
+    border-radius: 5px;
+    background-color: white;
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+}
+
+.opcoes-sintomas input:checked {
+    background-color: #b1cba7;
+    border-color: #5c8c26;
+}
+
+.opcoes-sintomas input:hover{
+    background-color: #cae0b8;
+}
+
+.opcoes-sintomas input:checked::after {
+    content: '✔';
+    font-size: 12px;
+    color: white;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.button-avancar {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #8ad93b;
+    color: #fff;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 5px;
+    font-size: 1.1em;
+    cursor: pointer;
+    z-index: 100;
+    transition: background-color 0.3s ease;
+}
+
+.button-avancar:hover {
+    background-color: #71b32f;
+}
+
+@media (min-width: 768px) {
+    .sinais-vitais {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
